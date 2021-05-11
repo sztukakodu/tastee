@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  db:
+    container_name: tastee_db
+    image: postgres:12.6
+    restart: always
+    environment:
+      POSTGRES_DB: tastee_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass123
+    ports:
+      - 8432:5432
