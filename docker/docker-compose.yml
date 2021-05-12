@@ -13,7 +13,16 @@ services:
       - 8432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    ports:
+      - 9000:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml
 
 volumes:
+  prometheus-data:
   db-data:
     driver: local
