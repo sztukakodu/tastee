@@ -38,7 +38,7 @@ class RecipesController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addRecipe(AddRecipeCommand command) {
+    public ResponseEntity<Void> addRecipe(@RequestBody AddRecipeCommand command) {
         String id = writeRecipes.addRecipe(command);
         return ResponseEntity
             .created(URI.create("/" + id))

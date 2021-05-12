@@ -24,7 +24,8 @@ class MemoryRecipesRepository implements RecipesRepository {
     @Override
     public String save(Recipe recipe) {
         String id = UUID.randomUUID().toString();
-        storage.put(id, recipe);
-        return id;
+        recipe.setId(id);
+        storage.put(recipe.getId(), recipe);
+        return recipe.getId();
     }
 }
