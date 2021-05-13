@@ -21,8 +21,17 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     command: --config.file=/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana:7.5.6
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 
 volumes:
+  grafana-data:
   prometheus-data:
   db-data:
-    driver: local
