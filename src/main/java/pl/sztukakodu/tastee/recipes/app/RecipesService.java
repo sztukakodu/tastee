@@ -2,18 +2,15 @@ package pl.sztukakodu.tastee.recipes.app;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
-import pl.sztukakodu.tastee.recipes.domain.Ingredient;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,25 +24,23 @@ class RecipesService implements ReadRecipesPort, WriteRecipesPort {
     }
 
     @Override
-    public Optional<Recipe> getRecipeById(String id) {
+    public Optional<Recipe> getRecipeById(Long id) {
         return repository.findById(id);
     }
 
     @Override
     public Page<Recipe> getPage(Pageable pageable) {
-        return new PageImpl<>(repository.findAll());
+        return repository.findAll(pageable);
     }
 
     @Override
-    public String addRecipe(AddRecipeCommand command) {
-        Recipe recipe = new Recipe(
+    public Long addRecipe(AddRecipeCommand command) {
+        Recipe newRecipe = new Recipe(
             command.getTitle(),
             command.getSteps(),
             command.getIngredients()
-                   .stream()
-                   .map(Ingredient::new)
-                   .collect(Collectors.toSet())
         );
-        return repository.save(recipe);
+        Recipe saved = repository.save(newRecipe);
+        return saved.getId();
     }
 }

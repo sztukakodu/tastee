@@ -1,15 +1,7 @@
 package pl.sztukakodu.tastee.recipes.db;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface RecipesRepository {
-
-    List<Recipe> findAll();
-
-    Optional<Recipe> findById(String id);
-
-    String save(Recipe recipe);
+public interface RecipesRepository extends JpaRepository<Recipe, Long> {
 }

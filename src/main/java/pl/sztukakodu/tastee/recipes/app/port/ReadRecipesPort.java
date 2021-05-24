@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ReadRecipesPort {
     List<Recipe> search();
 
-    Optional<Recipe> getRecipeById(String id);
+    Optional<Recipe> getRecipeById(Long id);
 
     Page<Recipe> getPage(Pageable pageable);
 }
