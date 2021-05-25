@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: tastee
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          # IP in MacOS:
+          # ifconfig | grep "inet " | grep -v 127.0.0.1
+          - '192.168.1.25:8080'
