@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
@@ -15,7 +16,9 @@ import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.net.URI;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -28,6 +31,7 @@ class RecipesController {
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
     private final SecureRandom random = new SecureRandom();
+    private final List<Double> list = new ArrayList<>();
 
     @PostMapping("/_generate")
     public void generate(@RequestParam(defaultValue = "100") int size) {
@@ -39,19 +43,38 @@ class RecipesController {
         return readRecipes.search();
     }
 
-    @SneakyThrows
+    @GetMapping("/_error")
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public void error(@RequestParam(defaultValue = "false") boolean slow) {
+        if (slow) {
+            delay();
+        }
+    }
+
+    @PostMapping("/_leak")
+    public void leak() {
+        for (int i = 0; i < 10_000_000; i++) {
+            list.add(Math.random());
+        }
+    }
+
     @GetMapping
     public Page<Recipe> getAll(Pageable pageable, @RequestParam(defaultValue = "false") boolean slow) {
-        if(slow) {
-            int sleepTime = random.nextInt(1000);
-            if(sleepTime >= 750) {
-                log.warn("I'm tired. Will answer in {} ms", sleepTime);
-            } else {
-                log.info("Will answer in {} ms", sleepTime);
-            }
-            Thread.sleep(sleepTime);
+        if (slow) {
+            delay();
         }
         return readRecipes.getPage(pageable);
+    }
+
+    @SneakyThrows
+    private void delay() {
+        int sleepTime = random.nextInt(1000);
+        if (sleepTime >= 750) {
+            log.warn("I'm tired. Will answer in {} ms", sleepTime);
+        } else {
+            log.info("Will answer in {} ms", sleepTime);
+        }
+        Thread.sleep(sleepTime);
     }
 
     @GetMapping("/{id}")
