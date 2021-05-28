@@ -1,6 +1,7 @@
 package pl.sztukakodu.tastee.recipes.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 @Entity
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Ingredient {
 
     @Id

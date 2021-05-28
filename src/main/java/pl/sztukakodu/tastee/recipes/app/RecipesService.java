@@ -11,7 +11,6 @@ import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
-import java.util.List;
 import java.util.Optional;
 
 @CacheConfig(cacheNames = "recipe")

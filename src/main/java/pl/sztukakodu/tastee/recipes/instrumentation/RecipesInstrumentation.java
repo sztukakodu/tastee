@@ -9,7 +9,6 @@ import pl.sztukakodu.tastee.recipes.db.IngredientsRepository;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
 
 import javax.annotation.PostConstruct;
-import java.util.function.ToDoubleFunction;
 
 @Component
 @AllArgsConstructor

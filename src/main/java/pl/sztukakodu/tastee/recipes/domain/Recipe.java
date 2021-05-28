@@ -1,6 +1,7 @@
 package pl.sztukakodu.tastee.recipes.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode(of = "id")
 public class Recipe {
     @Id
     @GeneratedValue
@@ -27,5 +29,9 @@ public class Recipe {
         this.title = title;
         this.steps = steps;
         this.ingredients = ingredients;
+    }
+
+    public boolean containsAllIngredients(Set<Ingredient> ingredients) {
+        return this.ingredients.containsAll(ingredients);
     }
 }
