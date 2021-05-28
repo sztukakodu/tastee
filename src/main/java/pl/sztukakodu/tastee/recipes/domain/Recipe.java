@@ -14,15 +14,16 @@ public class Recipe {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String title;
 
     private String steps;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "recipe_id")
-    private Set<IngredientItem> ingredients;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "recipe_ingredient")
+    private Set<Ingredient> ingredients;
 
-    public Recipe(String title, String steps, Set<IngredientItem> ingredients) {
+    public Recipe(String title, String steps, Set<Ingredient> ingredients) {
         this.title = title;
         this.steps = steps;
         this.ingredients = ingredients;

@@ -1,6 +1,8 @@
 package pl.sztukakodu.tastee.recipes.app;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import pl.sztukakodu.tastee.recipes.domain.Recipe;
 import java.util.List;
 import java.util.Optional;
 
+@CacheConfig(cacheNames = "recipe")
 @Service
 @AllArgsConstructor
 class RecipesService implements ReadRecipesPort, WriteRecipesPort {
@@ -23,6 +26,7 @@ class RecipesService implements ReadRecipesPort, WriteRecipesPort {
         return repository.findAll();
     }
 
+    @Cacheable
     @Override
     public Optional<Recipe> getRecipeById(Long id) {
         return repository.findById(id);

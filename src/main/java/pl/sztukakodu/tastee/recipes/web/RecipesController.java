@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort.AddRecipeCommand;
@@ -23,9 +24,15 @@ import java.util.Optional;
 @Slf4j
 class RecipesController {
 
+    private final GenerateRecipesPort generateRecipes;
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
     private final SecureRandom random = new SecureRandom();
+
+    @PostMapping("/_generate")
+    public void generate(@RequestParam(defaultValue = "100") int size) {
+        generateRecipes.generate(size);
+    }
 
     @PostMapping("/_search")
     public List<Recipe> search() {
