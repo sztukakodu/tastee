@@ -21,11 +21,6 @@ class RecipesService implements ReadRecipesPort, WriteRecipesPort {
 
     private final RecipesRepository repository;
 
-    @Override
-    public List<Recipe> search() {
-        return repository.findAll();
-    }
-
     @Cacheable
     @Override
     public Optional<Recipe> getRecipeById(Long id) {

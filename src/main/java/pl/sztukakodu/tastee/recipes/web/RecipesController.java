@@ -10,16 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
+import pl.sztukakodu.tastee.recipes.app.port.SearchRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort.AddRecipeCommand;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.net.URI;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @RestController
@@ -28,6 +26,7 @@ import java.util.Optional;
 class RecipesController {
 
     private final GenerateRecipesPort generateRecipes;
+    private final SearchRecipesPort searchRecipes;
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
     private final SecureRandom random = new SecureRandom();
@@ -39,8 +38,8 @@ class RecipesController {
     }
 
     @PostMapping("/_search")
-    public List<Recipe> search() {
-        return readRecipes.search();
+    public List<Recipe> search(@RequestParam Set<String> values) {
+        return searchRecipes.search(values);
     }
 
     @GetMapping("/_error")
