@@ -9,3 +9,4 @@ scrape_configs:
           # IP in MacOS:
           # ifconfig | grep "inet " | grep -v 127.0.0.1
           - '192.168.1.25:8080'
+          - '192.168.1.25:8081'
