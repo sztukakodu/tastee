@@ -1,5 +1,8 @@
 package pl.sztukakodu.tastee.recipes.web;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ class RecipesController {
 
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
+    private final MeterRegistry registry;
     private final SecureRandom random = new SecureRandom();
 
     @PostMapping("/_search")
@@ -36,20 +40,33 @@ class RecipesController {
     @GetMapping
     public Page<Recipe> getAll(Pageable pageable, @RequestParam(defaultValue = "false") boolean slow) {
         if(slow) {
-            int sleepTime = random.nextInt(1000);
-            if(sleepTime >= 750) {
-                log.warn("I'm tired. Will answer in {} ms", sleepTime);
-            } else {
-                log.info("Will answer in {} ms", sleepTime);
-            }
-            Thread.sleep(sleepTime);
+            sleep();
         }
         return readRecipes.getPage(pageable);
     }
 
+    private void sleep() throws InterruptedException {
+        int sleepTime = random.nextInt(1000);
+        if(sleepTime >= 750) {
+            log.warn("I'm tired. Will answer in {} ms", sleepTime);
+        } else {
+            log.info("Will answer in {} ms", sleepTime);
+        }
+        Thread.sleep(sleepTime);
+    }
+
     @GetMapping("/{id}")
     public Optional<Recipe> recipeById(@PathVariable Long id) {
-        return readRecipes.getRecipeById(id);
+        return readRecipes.getRecipeById(id)
+            .map(recipe -> {
+                Tag tag = Tag.of("success", "true");
+                registry.counter("api_recipe_get", List.of(tag)).increment();
+                return recipe;
+            }).or(() -> {
+                registry.counter("api_recipe_get", "success", "false").increment();
+                return Optional.empty();
+            });
+
     }
 
     @PostMapping
