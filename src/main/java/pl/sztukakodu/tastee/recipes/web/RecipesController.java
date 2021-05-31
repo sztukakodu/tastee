@@ -1,6 +1,5 @@
 package pl.sztukakodu.tastee.recipes.web;
 
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
@@ -13,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
+import pl.sztukakodu.tastee.recipes.app.port.SearchRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort.AddRecipeCommand;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
@@ -21,6 +21,7 @@ import java.net.URI;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -29,14 +30,15 @@ import java.util.Optional;
 class RecipesController {
 
     private final GenerateRecipesPort generateRecipes;
+    private final SearchRecipesPort searchRecipes;
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
     private final MeterRegistry registry;
     private final SecureRandom random = new SecureRandom();
 
     @PostMapping("/_search")
-    public List<Recipe> search() {
-        return readRecipes.search();
+    public Page<Recipe> search(Pageable pageable, @RequestParam Set<String> ingredients) {
+        return searchRecipes.search(pageable, ingredients);
     }
 
     @PostMapping("/_generate")

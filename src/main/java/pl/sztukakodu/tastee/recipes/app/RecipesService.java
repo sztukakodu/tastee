@@ -9,7 +9,6 @@ import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,11 +16,6 @@ import java.util.Optional;
 class RecipesService implements ReadRecipesPort, WriteRecipesPort {
 
     private final RecipesRepository repository;
-
-    @Override
-    public List<Recipe> search() {
-        return repository.findAll();
-    }
 
     @Override
     public Optional<Recipe> getRecipeById(Long id) {

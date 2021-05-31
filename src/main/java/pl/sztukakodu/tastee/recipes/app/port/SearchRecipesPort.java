@@ -4,11 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
-import java.util.Optional;
+import java.util.Set;
 
-public interface ReadRecipesPort {
-
-    Optional<Recipe> getRecipeById(Long id);
-
-    Page<Recipe> getPage(Pageable pageable);
+public interface SearchRecipesPort {
+    Page<Recipe> search(Pageable pageable, Set<String> ingredients);
 }
