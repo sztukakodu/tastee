@@ -3,6 +3,7 @@ package pl.sztukakodu.tastee.recipes.web;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Timer;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
 import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort.AddRecipeCommand;
@@ -26,6 +28,7 @@ import java.util.Optional;
 @Slf4j
 class RecipesController {
 
+    private final GenerateRecipesPort generateRecipes;
     private final ReadRecipesPort readRecipes;
     private final WriteRecipesPort writeRecipes;
     private final MeterRegistry registry;
@@ -34,6 +37,13 @@ class RecipesController {
     @PostMapping("/_search")
     public List<Recipe> search() {
         return readRecipes.search();
+    }
+
+    @PostMapping("/_generate")
+    public void generate(@RequestParam(defaultValue = "100") int size) {
+        Timer.Sample sample = Timer.start(registry);
+        int generated = generateRecipes.generate(size);
+        sample.stop(registry.timer("api_recipes_generate", "count", String.valueOf(generated)));
     }
 
     @SneakyThrows
