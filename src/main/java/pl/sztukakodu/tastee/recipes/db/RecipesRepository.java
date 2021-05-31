@@ -8,5 +8,5 @@ public interface RecipesRepository extends JpaRepository<Recipe, Long> {
     boolean existsByTitle(String title);
 
     @Query("SELECT AVG(r.ingredients.size) FROM Recipe r")
-    boolean avgIngredientsPerRecipe();
+    Double avgIngredientsPerRecipe();
 }

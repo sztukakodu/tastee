@@ -8,16 +8,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "uuid")
 public class Ingredient {
 
     @Id
     @GeneratedValue
     private Long id;
+
+    private final String uuid = UUID.randomUUID().toString();
 
     @Column(unique = true)
     private String name;

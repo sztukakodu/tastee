@@ -6,15 +6,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "uuid")
 public class Recipe {
     @Id
     @GeneratedValue
     private Long id;
+
+    private final String uuid = UUID.randomUUID().toString();
 
     @Column(unique = true)
     private String title;
