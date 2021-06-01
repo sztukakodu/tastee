@@ -1,5 +1,6 @@
 package pl.sztukakodu.tastee.recipes.web;
 
+import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
@@ -39,7 +40,23 @@ class RecipesController {
 
     @PostMapping("/_search")
     public Page<Recipe> search(Pageable pageable, @RequestParam Set<String> ingredients) {
-        return searchRecipes.search(pageable, ingredients);
+        // number of ingredients
+        DistributionSummary searchIngredients = DistributionSummary
+            .builder("api_search_ingredients")
+            .register(registry);
+        searchIngredients.record(ingredients.size());
+        // execute search
+        Page<Recipe> search = searchRecipes.search(pageable, ingredients);
+
+        // number of recipes
+        DistributionSummary recipesTotalSize = DistributionSummary
+            .builder("api_search_recipes_total_size")
+            .publishPercentileHistogram(true)
+            .minimumExpectedValue(1d)
+            .maximumExpectedValue(1000d)
+            .register(registry);
+        recipesTotalSize.record(search.getTotalElements());
+        return search;
     }
 
     @PostMapping("/_generate")
