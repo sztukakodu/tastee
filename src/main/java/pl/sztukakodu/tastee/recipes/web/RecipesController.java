@@ -19,6 +19,7 @@ import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.net.URI;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -45,13 +46,20 @@ class RecipesController {
     public void generate(@RequestParam(defaultValue = "100") int size) {
         Timer.Sample sample = Timer.start(registry);
         int generated = generateRecipes.generate(size);
-        sample.stop(registry.timer("api_recipes_generate", "count", String.valueOf(generated)));
+        Timer timer = Timer
+            .builder("api_recipes_generate")
+            .tag("count", String.valueOf(generated))
+            .publishPercentileHistogram()
+            .minimumExpectedValue(Duration.ofMillis(1))
+            .maximumExpectedValue(Duration.ofSeconds(10))
+            .register(registry);
+        sample.stop(timer);
     }
 
     @SneakyThrows
     @GetMapping
     public Page<Recipe> getAll(Pageable pageable, @RequestParam(defaultValue = "false") boolean slow) {
-        if(slow) {
+        if (slow) {
             sleep();
         }
         return readRecipes.getPage(pageable);
@@ -59,7 +67,7 @@ class RecipesController {
 
     private void sleep() throws InterruptedException {
         int sleepTime = random.nextInt(1000);
-        if(sleepTime >= 750) {
+        if (sleepTime >= 750) {
             log.warn("I'm tired. Will answer in {} ms", sleepTime);
         } else {
             log.info("Will answer in {} ms", sleepTime);
@@ -70,11 +78,11 @@ class RecipesController {
     @GetMapping("/{id}")
     public Optional<Recipe> recipeById(@PathVariable Long id) {
         return readRecipes.getRecipeById(id)
-            .map(recipe -> {
-                Tag tag = Tag.of("success", "true");
-                registry.counter("api_recipe_get", List.of(tag)).increment();
-                return recipe;
-            }).or(() -> {
+                          .map(recipe -> {
+                              Tag tag = Tag.of("success", "true");
+                              registry.counter("api_recipe_get", List.of(tag)).increment();
+                              return recipe;
+                          }).or(() -> {
                 registry.counter("api_recipe_get", "success", "false").increment();
                 return Optional.empty();
             });
