@@ -1,18 +1,6 @@
 global:
   scrape_interval: 15s
 
-# Rules and alerts are read from the specified file(s)
-rule_files:
-  - rules.yml
-
-# Alerting specifies settings related to the Alertmanager
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-            # Alertmanager's default port is 9093
-            - 192.168.1.25:9093
-
 scrape_configs:
   - job_name: tastee
     metrics_path: /actuator/prometheus
@@ -20,5 +8,4 @@ scrape_configs:
       - targets:
           # IP in MacOS:
           # ifconfig | grep "inet " | grep -v 127.0.0.1
-          - '192.168.1.25:8080'
-          - '192.168.1.25:8081'
+          - '192.168.1.249:8080'

@@ -22,19 +22,6 @@ services:
       - prometheus-data:/prometheus
       - ./prometheus:/etc/prometheus
     command: --config.file=/etc/prometheus/prometheus.yml
-    depends_on:
-      - alertmanager
-
-  alertmanager:
-    image: prom/alertmanager
-    volumes:
-      - ./prometheus:/prometheus
-      - prom-alertmanager-data:/data
-    command:
-      - '--config.file=/prometheus/alertmanager.yml'
-      - '--storage.path=/data'
-    ports:
-      - 9093:9093
 
   grafana:
     image: grafana/grafana:7.5.6
@@ -49,4 +36,3 @@ volumes:
   db-data:
   prometheus-data:
   grafana-data:
-  prom-alertmanager-data:
