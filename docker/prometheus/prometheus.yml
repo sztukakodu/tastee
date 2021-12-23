@@ -11,7 +11,7 @@ alerting:
     - static_configs:
         - targets:
             # Alertmanager's default port is 9093
-            - 192.168.1.25:9093
+            - 192.168.1.11:9093
 
 scrape_configs:
   - job_name: tastee
@@ -20,5 +20,5 @@ scrape_configs:
       - targets:
           # IP in MacOS:
           # ifconfig | grep "inet " | grep -v 127.0.0.1
-          - '192.168.1.25:8080'
-          - '192.168.1.25:8081'
+          - '192.168.1.11:8080'
+          # - '192.168.1.25:8081'
