@@ -6,6 +6,6 @@ import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.util.Set;
 
-public interface SearchRecipesPort {
+public interface SearchRecipes {
     Page<Recipe> search(Pageable pageable, Set<String> ingredients);
 }

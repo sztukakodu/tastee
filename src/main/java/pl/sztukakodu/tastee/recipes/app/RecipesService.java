@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.sztukakodu.tastee.recipes.app.port.ReadRecipesPort;
-import pl.sztukakodu.tastee.recipes.app.port.WriteRecipesPort;
+import pl.sztukakodu.tastee.recipes.app.port.ReadRecipes;
+import pl.sztukakodu.tastee.recipes.app.port.WriteRecipes;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-class RecipesService implements ReadRecipesPort, WriteRecipesPort {
+class RecipesService implements ReadRecipes, WriteRecipes {
 
     private final RecipesRepository repository;
 

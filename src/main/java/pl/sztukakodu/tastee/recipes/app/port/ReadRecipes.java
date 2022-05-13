@@ -6,7 +6,7 @@ import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import java.util.Optional;
 
-public interface ReadRecipesPort {
+public interface ReadRecipes {
 
     Optional<Recipe> getRecipeById(Long id);
 

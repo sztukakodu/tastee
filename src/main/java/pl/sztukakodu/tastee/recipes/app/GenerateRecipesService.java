@@ -2,19 +2,20 @@ package pl.sztukakodu.tastee.recipes.app;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipesPort;
+import pl.sztukakodu.tastee.recipes.app.port.GenerateRecipes;
 import pl.sztukakodu.tastee.recipes.db.IngredientsRepository;
 import pl.sztukakodu.tastee.recipes.db.RecipesRepository;
 import pl.sztukakodu.tastee.recipes.domain.Ingredient;
 import pl.sztukakodu.tastee.recipes.domain.Recipe;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-class GenerateRecipesService implements GenerateRecipesPort {
+class GenerateRecipesService implements GenerateRecipes {
 
     private final RecipesRepository repository;
     private final IngredientsRepository ingredientsRepository;
@@ -22,17 +23,13 @@ class GenerateRecipesService implements GenerateRecipesPort {
 
     @Override
     @Transactional
-    public int generate(int size) {
-        int generatedCount = 0;
-        for (int i = 0; i < size; i++) {
-            Recipe recipe = provider.newRecipe();
-            if (!repository.existsByTitle(recipe.getTitle())) {
-                recipe.setIngredients(fetchIngredients(recipe.getIngredients()));
-                repository.save(recipe);
-                generatedCount++;
-            }
+    public Optional<Recipe> createNew() {
+        Recipe recipe = provider.newRecipe();
+        if (!repository.existsByTitle(recipe.getTitle())) {
+            recipe.setIngredients(fetchIngredients(recipe.getIngredients()));
+            return Optional.of(repository.save(recipe));
         }
-        return generatedCount;
+        return Optional.empty();
     }
 
     private Set<Ingredient> fetchIngredients(Set<Ingredient> ingredients) {

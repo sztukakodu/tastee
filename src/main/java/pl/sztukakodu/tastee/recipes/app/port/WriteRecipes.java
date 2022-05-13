@@ -5,7 +5,7 @@ import pl.sztukakodu.tastee.recipes.domain.Ingredient;
 
 import java.util.Set;
 
-public interface WriteRecipesPort {
+public interface WriteRecipes {
 
     Long addRecipe(AddRecipeCommand command);
 
