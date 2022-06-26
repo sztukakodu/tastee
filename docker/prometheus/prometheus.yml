@@ -4,16 +4,6 @@ global:
   # How frequently to evaluate rules
   evaluation_interval: 10s
 
-rule_files:
-  - rules.yml
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-            # Alertmanager's default port is 9093
-            - 192.168.1.11:9093
-
 # Rules and alerts are read from the specified file(s)
 rule_files:
   - rules.yml
@@ -33,5 +23,4 @@ scrape_configs:
       - targets:
           # IP in MacOS:
           # ifconfig | grep "inet " | grep -v 127.0.0.1
-          - '192.168.1.11:8080'
-          # - '192.168.1.25:8081'
+          - '192.168.1.249:8080'

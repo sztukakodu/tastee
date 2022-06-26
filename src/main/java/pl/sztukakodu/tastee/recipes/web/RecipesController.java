@@ -1,9 +1,11 @@
 package pl.sztukakodu.tastee.recipes.web;
 
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.cumulative.CumulativeCounter;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +96,8 @@ class RecipesController {
 
     @GetMapping("/{id}")
     public Optional<Recipe> recipeById(@PathVariable Long id) {
+        Counter apiRecipeGet = registry.counter("api_recipe_get");
+        apiRecipeGet.count();
         return readRecipes.getRecipeById(id)
                           .map(recipe -> {
                               Tag tag = Tag.of("success", "true");
